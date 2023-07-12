@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="879a4ca790384637904a929dda2324e4" Name="Diagram1">
+        <EntityTypeShape EntityType="BookAMechanicModel.tbl_customer" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookAMechanicModel.tbl_mechanic" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookAMechanicModel.tbl_admin" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BookAMechanicModel.tbl_cancel" Width="1.5" PointX="7.25" PointY="5.5" />
+        <EntityTypeShape EntityType="BookAMechanicModel.tbl_completed" Width="1.5" PointX="7" PointY="0.875" />
+        <EntityTypeShape EntityType="BookAMechanicModel.tbl_order" Width="1.5" PointX="5" PointY="5" />
+        <AssociationConnector Association="BookAMechanicModel.FK_Orders_Cancel_Foreign_orderid" />
+        <AssociationConnector Association="BookAMechanicModel.FK_Orders_Complete_Foreign_customerid" />
+        <AssociationConnector Association="BookAMechanicModel.FK_Orders_Complete_Foreign_mechanicid" />
+        <AssociationConnector Association="BookAMechanicModel.FK_Orders_Complete_Foreign_orderid" />
+        <AssociationConnector Association="BookAMechanicModel.FK_Orders_Customers" />
+        <AssociationConnector Association="BookAMechanicModel.FK_Orders_Customers_Foreign" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

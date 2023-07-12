@@ -1,0 +1,495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BookAMechanicModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'BookAMechanic.dbo.tbl_admin' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tbl_admin">
+          <Key>
+            <PropertyRef Name="username" />
+            <PropertyRef Name="password" />
+          </Key>
+          <Property Name="username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_cancel">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="order_id" Type="int" Nullable="false" />
+          <Property Name="cancelled_by" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="reason" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="tbl_completed">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="order_id" Type="int" Nullable="false" />
+          <Property Name="customer_review" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="mechanic_review" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="client_rating" Type="int" Nullable="false" />
+          <Property Name="mechanic_rating" Type="int" Nullable="false" />
+          <Property Name="complete_date" Type="datetime" Nullable="false" />
+          <Property Name="client_id" Type="int" Nullable="false" />
+          <Property Name="mechanic_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="lastname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="address" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="contact" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="isOnline" Type="bit" Nullable="false" />
+          <Property Name="isBooked" Type="bit" Nullable="false" />
+          <Property Name="avg_rating" Type="decimal" Precision="2" Scale="1" />
+        </EntityType>
+        <EntityType Name="tbl_mechanic">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="lastname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="garageName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="address" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="contact" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="isOnline" Type="bit" Nullable="false" />
+          <Property Name="isBooked" Type="bit" Nullable="false" />
+          <Property Name="avg_rating" Type="decimal" Precision="2" Scale="1" />
+        </EntityType>
+        <EntityType Name="tbl_order">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_id" Type="int" Nullable="false" />
+          <Property Name="mechanic_id" Type="int" Nullable="false" />
+          <Property Name="order_date" Type="datetime" Nullable="false" />
+          <Property Name="service" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="order_price" Type="decimal" Precision="18" Scale="1" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Orders_Cancel_Foreign_orderid">
+          <End Role="tbl_order" Type="Self.tbl_order" Multiplicity="1" />
+          <End Role="tbl_cancel" Type="Self.tbl_cancel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_order">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_cancel">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Complete_Foreign_customerid">
+          <End Role="tbl_customer" Type="Self.tbl_customer" Multiplicity="1" />
+          <End Role="tbl_completed" Type="Self.tbl_completed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_completed">
+              <PropertyRef Name="client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Complete_Foreign_mechanicid">
+          <End Role="tbl_mechanic" Type="Self.tbl_mechanic" Multiplicity="1" />
+          <End Role="tbl_completed" Type="Self.tbl_completed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_mechanic">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_completed">
+              <PropertyRef Name="mechanic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Complete_Foreign_orderid">
+          <End Role="tbl_order" Type="Self.tbl_order" Multiplicity="1" />
+          <End Role="tbl_completed" Type="Self.tbl_completed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_order">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_completed">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Customers">
+          <End Role="tbl_customer" Type="Self.tbl_customer" Multiplicity="1" />
+          <End Role="tbl_order" Type="Self.tbl_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_order">
+              <PropertyRef Name="customer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Customers_Foreign">
+          <End Role="tbl_mechanic" Type="Self.tbl_mechanic" Multiplicity="1" />
+          <End Role="tbl_order" Type="Self.tbl_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_mechanic">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_order">
+              <PropertyRef Name="mechanic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BookAMechanicModelStoreContainer">
+          <EntitySet Name="tbl_cancel" EntityType="Self.tbl_cancel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_completed" EntityType="Self.tbl_completed" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_mechanic" EntityType="Self.tbl_mechanic" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_order" EntityType="Self.tbl_order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[tbl_admin].[username] AS [username], 
+[tbl_admin].[password] AS [password]
+FROM [dbo].[tbl_admin] AS [tbl_admin]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Orders_Cancel_Foreign_orderid" Association="Self.FK_Orders_Cancel_Foreign_orderid">
+            <End Role="tbl_order" EntitySet="tbl_order" />
+            <End Role="tbl_cancel" EntitySet="tbl_cancel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Complete_Foreign_customerid" Association="Self.FK_Orders_Complete_Foreign_customerid">
+            <End Role="tbl_customer" EntitySet="tbl_customer" />
+            <End Role="tbl_completed" EntitySet="tbl_completed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Complete_Foreign_mechanicid" Association="Self.FK_Orders_Complete_Foreign_mechanicid">
+            <End Role="tbl_mechanic" EntitySet="tbl_mechanic" />
+            <End Role="tbl_completed" EntitySet="tbl_completed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Complete_Foreign_orderid" Association="Self.FK_Orders_Complete_Foreign_orderid">
+            <End Role="tbl_order" EntitySet="tbl_order" />
+            <End Role="tbl_completed" EntitySet="tbl_completed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Customers" Association="Self.FK_Orders_Customers">
+            <End Role="tbl_customer" EntitySet="tbl_customer" />
+            <End Role="tbl_order" EntitySet="tbl_order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Customers_Foreign" Association="Self.FK_Orders_Customers_Foreign">
+            <End Role="tbl_mechanic" EntitySet="tbl_mechanic" />
+            <End Role="tbl_order" EntitySet="tbl_order" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BookAMechanicModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tbl_customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="contact" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="isOnline" Type="Boolean" Nullable="false" />
+          <Property Name="isBooked" Type="Boolean" Nullable="false" />
+          <Property Name="avg_rating" Type="Decimal" Precision="2" Scale="1" />
+          <NavigationProperty Name="tbl_completed" Relationship="BookAMechanicModel.FK_Orders_Complete_Foreign_customerid" FromRole="tbl_customer" ToRole="tbl_completed" />
+          <NavigationProperty Name="tbl_order" Relationship="BookAMechanicModel.FK_Orders_Customers" FromRole="tbl_customer" ToRole="tbl_order" />
+        </EntityType>
+        <EntityType Name="tbl_mechanic">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="garageName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="contact" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="isOnline" Type="Boolean" Nullable="false" />
+          <Property Name="isBooked" Type="Boolean" Nullable="false" />
+          <Property Name="avg_rating" Type="Decimal" Precision="2" Scale="1" />
+          <NavigationProperty Name="tbl_completed" Relationship="BookAMechanicModel.FK_Orders_Complete_Foreign_mechanicid" FromRole="tbl_mechanic" ToRole="tbl_completed" />
+          <NavigationProperty Name="tbl_order" Relationship="BookAMechanicModel.FK_Orders_Customers_Foreign" FromRole="tbl_mechanic" ToRole="tbl_order" />
+        </EntityType>
+        <EntityType Name="tbl_admin">
+          <Key>
+            <PropertyRef Name="username" />
+            <PropertyRef Name="password" />
+          </Key>
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="BookAMechanicEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tbl_customer" EntityType="Self.tbl_customer" />
+          <EntitySet Name="tbl_mechanic" EntityType="Self.tbl_mechanic" />
+          <EntitySet Name="tbl_admin" EntityType="Self.tbl_admin" />
+          <EntitySet Name="tbl_cancel" EntityType="BookAMechanicModel.tbl_cancel" />
+          <EntitySet Name="tbl_completed" EntityType="BookAMechanicModel.tbl_completed" />
+          <EntitySet Name="tbl_order" EntityType="BookAMechanicModel.tbl_order" />
+          <AssociationSet Name="FK_Orders_Cancel_Foreign_orderid" Association="BookAMechanicModel.FK_Orders_Cancel_Foreign_orderid">
+            <End Role="tbl_order" EntitySet="tbl_order" />
+            <End Role="tbl_cancel" EntitySet="tbl_cancel" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Complete_Foreign_customerid" Association="BookAMechanicModel.FK_Orders_Complete_Foreign_customerid">
+            <End Role="tbl_customer" EntitySet="tbl_customer" />
+            <End Role="tbl_completed" EntitySet="tbl_completed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Complete_Foreign_mechanicid" Association="BookAMechanicModel.FK_Orders_Complete_Foreign_mechanicid">
+            <End Role="tbl_mechanic" EntitySet="tbl_mechanic" />
+            <End Role="tbl_completed" EntitySet="tbl_completed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Complete_Foreign_orderid" Association="BookAMechanicModel.FK_Orders_Complete_Foreign_orderid">
+            <End Role="tbl_order" EntitySet="tbl_order" />
+            <End Role="tbl_completed" EntitySet="tbl_completed" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Customers" Association="BookAMechanicModel.FK_Orders_Customers">
+            <End Role="tbl_customer" EntitySet="tbl_customer" />
+            <End Role="tbl_order" EntitySet="tbl_order" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Customers_Foreign" Association="BookAMechanicModel.FK_Orders_Customers_Foreign">
+            <End Role="tbl_mechanic" EntitySet="tbl_mechanic" />
+            <End Role="tbl_order" EntitySet="tbl_order" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tbl_cancel">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order_id" Type="Int32" Nullable="false" />
+          <Property Name="cancelled_by" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="reason" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_order" Relationship="BookAMechanicModel.FK_Orders_Cancel_Foreign_orderid" FromRole="tbl_cancel" ToRole="tbl_order" />
+        </EntityType>
+        <EntityType Name="tbl_completed">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order_id" Type="Int32" Nullable="false" />
+          <Property Name="customer_review" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="mechanic_review" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="client_rating" Type="Int32" Nullable="false" />
+          <Property Name="mechanic_rating" Type="Int32" Nullable="false" />
+          <Property Name="complete_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="client_id" Type="Int32" Nullable="false" />
+          <Property Name="mechanic_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_customer" Relationship="BookAMechanicModel.FK_Orders_Complete_Foreign_customerid" FromRole="tbl_completed" ToRole="tbl_customer" />
+          <NavigationProperty Name="tbl_mechanic" Relationship="BookAMechanicModel.FK_Orders_Complete_Foreign_mechanicid" FromRole="tbl_completed" ToRole="tbl_mechanic" />
+          <NavigationProperty Name="tbl_order" Relationship="BookAMechanicModel.FK_Orders_Complete_Foreign_orderid" FromRole="tbl_completed" ToRole="tbl_order" />
+        </EntityType>
+        <EntityType Name="tbl_order">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_id" Type="Int32" Nullable="false" />
+          <Property Name="mechanic_id" Type="Int32" Nullable="false" />
+          <Property Name="order_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="service" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="order_price" Type="Decimal" Precision="18" Scale="1" />
+          <Property Name="status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_cancel" Relationship="BookAMechanicModel.FK_Orders_Cancel_Foreign_orderid" FromRole="tbl_order" ToRole="tbl_cancel" />
+          <NavigationProperty Name="tbl_completed" Relationship="BookAMechanicModel.FK_Orders_Complete_Foreign_orderid" FromRole="tbl_order" ToRole="tbl_completed" />
+          <NavigationProperty Name="tbl_customer" Relationship="BookAMechanicModel.FK_Orders_Customers" FromRole="tbl_order" ToRole="tbl_customer" />
+          <NavigationProperty Name="tbl_mechanic" Relationship="BookAMechanicModel.FK_Orders_Customers_Foreign" FromRole="tbl_order" ToRole="tbl_mechanic" />
+        </EntityType>
+        <Association Name="FK_Orders_Cancel_Foreign_orderid">
+          <End Type="BookAMechanicModel.tbl_order" Role="tbl_order" Multiplicity="1" />
+          <End Type="BookAMechanicModel.tbl_cancel" Role="tbl_cancel" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_order">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_cancel">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Complete_Foreign_customerid">
+          <End Type="BookAMechanicModel.tbl_customer" Role="tbl_customer" Multiplicity="1" />
+          <End Type="BookAMechanicModel.tbl_completed" Role="tbl_completed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_completed">
+              <PropertyRef Name="client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Complete_Foreign_mechanicid">
+          <End Type="BookAMechanicModel.tbl_mechanic" Role="tbl_mechanic" Multiplicity="1" />
+          <End Type="BookAMechanicModel.tbl_completed" Role="tbl_completed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_mechanic">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_completed">
+              <PropertyRef Name="mechanic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Complete_Foreign_orderid">
+          <End Type="BookAMechanicModel.tbl_order" Role="tbl_order" Multiplicity="1" />
+          <End Type="BookAMechanicModel.tbl_completed" Role="tbl_completed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_order">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_completed">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Customers">
+          <End Type="BookAMechanicModel.tbl_customer" Role="tbl_customer" Multiplicity="1" />
+          <End Type="BookAMechanicModel.tbl_order" Role="tbl_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_order">
+              <PropertyRef Name="customer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Customers_Foreign">
+          <End Type="BookAMechanicModel.tbl_mechanic" Role="tbl_mechanic" Multiplicity="1" />
+          <End Type="BookAMechanicModel.tbl_order" Role="tbl_order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_mechanic">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tbl_order">
+              <PropertyRef Name="mechanic_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BookAMechanicModelStoreContainer" CdmEntityContainer="BookAMechanicEntities">
+          <EntitySetMapping Name="tbl_customer">
+            <EntityTypeMapping TypeName="BookAMechanicModel.tbl_customer">
+              <MappingFragment StoreEntitySet="tbl_customer">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="contact" ColumnName="contact" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="isOnline" ColumnName="isOnline" />
+                <ScalarProperty Name="isBooked" ColumnName="isBooked" />
+                <ScalarProperty Name="avg_rating" ColumnName="avg_rating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_mechanic">
+            <EntityTypeMapping TypeName="BookAMechanicModel.tbl_mechanic">
+              <MappingFragment StoreEntitySet="tbl_mechanic">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="garageName" ColumnName="garageName" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="contact" ColumnName="contact" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="isOnline" ColumnName="isOnline" />
+                <ScalarProperty Name="isBooked" ColumnName="isBooked" />
+                <ScalarProperty Name="avg_rating" ColumnName="avg_rating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_admin">
+            <EntityTypeMapping TypeName="BookAMechanicModel.tbl_admin">
+              <MappingFragment StoreEntitySet="tbl_admin">
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_cancel">
+            <EntityTypeMapping TypeName="BookAMechanicModel.tbl_cancel">
+              <MappingFragment StoreEntitySet="tbl_cancel">
+                <ScalarProperty Name="reason" ColumnName="reason" />
+                <ScalarProperty Name="cancelled_by" ColumnName="cancelled_by" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_completed">
+            <EntityTypeMapping TypeName="BookAMechanicModel.tbl_completed">
+              <MappingFragment StoreEntitySet="tbl_completed">
+                <ScalarProperty Name="mechanic_id" ColumnName="mechanic_id" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="complete_date" ColumnName="complete_date" />
+                <ScalarProperty Name="mechanic_rating" ColumnName="mechanic_rating" />
+                <ScalarProperty Name="client_rating" ColumnName="client_rating" />
+                <ScalarProperty Name="mechanic_review" ColumnName="mechanic_review" />
+                <ScalarProperty Name="customer_review" ColumnName="customer_review" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_order">
+            <EntityTypeMapping TypeName="BookAMechanicModel.tbl_order">
+              <MappingFragment StoreEntitySet="tbl_order">
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="order_price" ColumnName="order_price" />
+                <ScalarProperty Name="service" ColumnName="service" />
+                <ScalarProperty Name="order_date" ColumnName="order_date" />
+                <ScalarProperty Name="mechanic_id" ColumnName="mechanic_id" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
